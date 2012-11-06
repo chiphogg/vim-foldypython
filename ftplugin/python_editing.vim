@@ -11,6 +11,8 @@ set foldmethod=expr
 set foldexpr=PythonFoldExpr(v:lnum)
 set foldtext=PythonFoldText()
 
+" Utility functions {{{1
+
 function! PythonFoldText()
 
     let size = printf("%4d", 1 + v:foldend - v:foldstart)
@@ -27,22 +29,55 @@ function! PythonFoldText()
 
 endfunction
 
-function! PythonFoldExpr(lnum)
+" FUNCTION: s:FoldlevelFromIndent(lnum) {{{2
+" Determine the foldlevel associated with an indent.
+" Encapsulating within a function gives flexibility to add 'smartness' later,
+" i.e., to detect the style of a particular python file dynamically. 
+"
+" Args:
+" lnum: The line number to examine
+"
+" Return:
+" The number of indents for the given line
+function! s:FoldlevelFromIndent(lnum)
+    return indent(a:lnum) / &shiftwidth
+endfunction
 
-    if indent( nextnonblank(a:lnum) ) == 0
-        return 0
+function! PythonFoldExpr(lnum)
+    let l:blank = '\v^\s*$'
+
+    " 'Class name' lines go outside the fold; preceding whitespace is unfolded
+    let l:class_line =  '\v^\s*class\s'
+    if getline(a:lnum + 1) =~# l:class_line
+        return s:FoldlevelFromIndent(a:lnum + 1)
+    elseif getline(a:lnum) =~# l:class_line
+        return s:FoldlevelFromIndent(a:lnum)
+    elseif getline(a:lnum - 1) =~# l:class_line
+        return s:FoldlevelFromIndent(a:lnum)
     endif
-    
-    if getline(a:lnum-1) =~ '^\(class\|def\)\s'
-        return 1
+
+    " Function definitions get included in the fold
+    let l:def_line = '\v^\s*def\s'
+    if getline(a:lnum) =~# l:def_line
+        return ">" . (s:FoldlevelFromIndent(a:lnum) + 1)
     endif
-        
-    if getline(a:lnum) =~ '^\s*$'
+
+    " Logic for blank lines:
+    " If they directly precede a 'class' line, they aren't folded
+    " (This logic is handled above in the 'class name' section.)
+    if getline(a:lnum) =~# l:blank
+"        " If the next line is NONblank, and its indent has decreased by 2 or
+"        " more, unfold this line (as a visual spacer).
+"        if getline(a:lnum + 1) !~# l:blank
+"            let l:last_indent = s:FoldlevelFromIndent(prevnonblank(a:lnum))
+"            let l:this_indent = s:FoldlevelFromIndent(a:lnum)
+"            if l:this_indent < l:last_indent - 1
+"                return (l:this_indent > 0) ? (l:this_indent) : 0
+"            endif
+"        endif
+"
+"        " Otherwise, fold blank lines into the preceding fold structure.
         return "="
-    endif
-    
-    if indent(a:lnum) == 0
-        return 0
     endif
 
     return '='
