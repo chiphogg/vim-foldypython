@@ -4,8 +4,8 @@ finish
 endif
 let b:did_ftplugin = 1
 
-map <buffer> <S-e> :w<CR>:!/usr/bin/env python % <CR>
-map <buffer> gd /def <C-R><C-W><CR> 
+"map <buffer> <S-e> :w<CR>:!/usr/bin/env python % <CR>
+"map <buffer> gd /def <C-R><C-W><CR>
 
 set foldmethod=expr
 set foldexpr=PythonFoldExpr(v:lnum)
