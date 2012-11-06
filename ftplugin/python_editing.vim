@@ -13,17 +13,8 @@ set foldtext=PythonFoldText()
 
 function! PythonFoldText()
 
-    let size = 1 + v:foldend - v:foldstart
-    if size < 10
-        let size = " " . size
-    endif
-    if size < 100
-        let size = " " . size
-    endif
-    if size < 1000
-        let size = " " . size
-    endif
-    
+    let size = printf("%4d", 1 + v:foldend - v:foldstart)
+
     if match(getline(v:foldstart), '"""') >= 0
         let text = substitute(getline(v:foldstart), '"""', '', 'g' ) . ' '
     elseif match(getline(v:foldstart), "'''") >= 0
