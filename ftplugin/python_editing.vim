@@ -11,20 +11,6 @@ set foldmethod=expr
 set foldexpr=PythonFoldExpr(v:lnum)
 set foldtext=PythonFoldText()
 
-map <buffer> f za
-map <buffer> F :call ToggleFold()<CR>
-let b:folded = 1
-
-function! ToggleFold()
-    if( b:folded == 0 )
-        exec "normal! zM"
-        let b:folded = 1
-    else
-        exec "normal! zR"
-        let b:folded = 0
-    endif
-endfunction
-
 function! PythonFoldText()
 
     let size = 1 + v:foldend - v:foldstart
@@ -45,7 +31,7 @@ function! PythonFoldText()
     else
         let text = getline(v:foldstart)
     endif
-    
+
     return size . ' lines:'. text . ' '
 
 endfunction
@@ -80,6 +66,6 @@ function! ReFold()
     set foldmethod=expr
     set foldexpr=PythonFoldExpr(v:lnum)
     set foldtext=PythonFoldText()
-    echo 
+    echo
 endfunction
 
