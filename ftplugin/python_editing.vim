@@ -88,3 +88,4 @@ endfunction
 nnoremap <silent> <buffer> ,`1 :call foldypython#Test1()<CR>
 nnoremap <silent> <buffer> ,`2 :call foldypython#Test2()<CR>
 nnoremap <silent> <buffer> ,`3 :call foldypython#Test3()<CR>
+nnoremap <silent> <buffer> ,`4 :call foldypython#Test4()<CR>

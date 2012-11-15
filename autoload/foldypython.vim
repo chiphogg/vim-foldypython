@@ -210,3 +210,7 @@ endfunction
 function! foldypython#Test3()
   echom "Fold as" foldypython#FoldLevel(line("."))
 endfunction
+
+function! foldypython#Test4()
+  echom "Indent level:" s:Indent(line("."))
+endfunction
