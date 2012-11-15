@@ -134,7 +134,9 @@ function! foldypython#AdaptTabStyle()
 
   " Set shiftwidth to match first indented non-blank line
   exe "normal! gg/\\v^\\s+\\S\<CR>"
-  exe "set shiftwidth=".indent(".")
+  if indent(".") > 0
+    exe "set shiftwidth=".indent(".")
+  endif
   " recompute folds
   normal! zx
 
