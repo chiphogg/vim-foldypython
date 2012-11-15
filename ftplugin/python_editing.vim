@@ -8,7 +8,7 @@ let b:did_ftplugin = 1
 "map <buffer> gd /def <C-R><C-W><CR>
 
 set foldmethod=expr
-set foldexpr=PythonFoldExpr(v:lnum)
+set foldexpr=foldypython#FoldLevel(v:lnum)
 set foldtext=PythonFoldText()
 
 " Utility functions {{{1
@@ -84,14 +84,7 @@ function! PythonFoldExpr(lnum)
 
 endfunction
 
-" In case folding breaks down
-function! ReFold()
-    set foldmethod=expr
-    set foldexpr=0
-    set foldnestmax=1
-    set foldmethod=expr
-    set foldexpr=PythonFoldExpr(v:lnum)
-    set foldtext=PythonFoldText()
-    echo
-endfunction
-
+" Testing
+nnoremap <silent> <buffer> ,`1 :call foldypython#Test1()<CR>
+nnoremap <silent> <buffer> ,`2 :call foldypython#Test2()<CR>
+nnoremap <silent> <buffer> ,`3 :call foldypython#Test3()<CR>
