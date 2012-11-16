@@ -147,7 +147,7 @@ function! foldypython#AdaptTabStyle()
     " I just hacked it together quick-and-dirty.
     let l:kw = '(class|def|if|for|while|try|except|finally)'
     silent exe "normal! gg/\\v^".l:kw.".*:\\s*$\\_.\\s+\\S\<CR>j"
-    silent exe "set shiftwidth=".indent(".")
+    silent exe "setlocal shiftwidth=".indent(".")
   endtry
   let &foldenable = l:fold_status
 
