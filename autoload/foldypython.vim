@@ -133,10 +133,21 @@ function! foldypython#AdaptTabStyle()
   call s:PreserveStart()
 
   " Set shiftwidth to match first indented non-blank line
-  exe "normal! gg/\\v^\\s+\\S\<CR>"
-  if indent(".") > 0
-    exe "set shiftwidth=".indent(".")
-  endif
+  " (We have to be careful to disable folds while we search!
+  " Lines hiding inside a fold don't get detected.)
+  let l:fold_status = &foldenable
+  set nofoldenable
+  try
+    " Basically, go to the first line which
+    "   a) is non-indented and non-blank,
+    "   b) ends with a colon, and
+    "   c) is followed by an *indented* non-blank line.
+    " If we find such a line, assume its indent reflects the coding style.
+    silent exe "normal! gg/\\v^\\S.*:\\s*$\\_.\\s+\\S\<CR>j"
+    silent exe "set shiftwidth=".indent(".")
+  endtry
+  let &foldenable = l:fold_status
+
   " recompute folds
   normal! zx
 
