@@ -139,11 +139,14 @@ function! foldypython#AdaptTabStyle()
   set nofoldenable
   try
     " Basically, go to the first line which
-    "   a) is non-indented and non-blank,
+    "   a) begins with a block-beginning keyword,
     "   b) ends with a colon, and
     "   c) is followed by an *indented* non-blank line.
     " If we find such a line, assume its indent reflects the coding style.
-    silent exe "normal! gg/\\v^\\S.*:\\s*$\\_.\\s+\\S\<CR>j"
+    " NOTE: the list of block-beginning keywords is by no means exhaustive!
+    " I just hacked it together quick-and-dirty.
+    let l:kw = '(class|def|if|for|while|try|except|finally)'
+    silent exe "normal! gg/\\v^".l:kw.".*:\\s*$\\_.\\s+\\S\<CR>j"
     silent exe "set shiftwidth=".indent(".")
   endtry
   let &foldenable = l:fold_status
