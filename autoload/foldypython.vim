@@ -191,6 +191,10 @@ function! foldypython#FoldLevel(l_num)
     if s:LastLineBeforeClass(a:l_num)
       " The last line before a class definition shares its foldlevel
       return '-1'
+      " LOGIC FOR 'LAST LINE IN A CLASS':
+      "   - A blank line
+      "   - Not followed by a blank line
+      "   - Indent of following line not more than that of previous class line
     else
       " All other blank lines share the foldlevel of the previous line
       return '='
